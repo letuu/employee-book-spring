@@ -1,8 +1,10 @@
 package com.skypro.employeebookspring.service;
 
 import com.skypro.employeebookspring.exception.EmployeeNotFoundExp;
+import com.skypro.employeebookspring.exception.InvalidEmployeeRequestExp;
 import com.skypro.employeebookspring.model.Employee;
 import com.skypro.employeebookspring.record.EmployeeRequest;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -18,11 +20,14 @@ public class EmployeeService {
     }
 
     public Employee addEmployee(EmployeeRequest employeeRequest) {
-        if (employeeRequest.getFirstName() == null || employeeRequest.getLastName() == null) {
-            throw new IllegalArgumentException("Employee name should be set");
+//        if (employeeRequest.getFirstName() == null || employeeRequest.getLastName() == null) {
+        if (!StringUtils.isAlpha(employeeRequest.getFirstName()) ||
+                !StringUtils.isAlpha(employeeRequest.getLastName())) {
+//            throw new IllegalArgumentException("Employee name should be set");
+            throw new InvalidEmployeeRequestExp();
         }
-        Employee employee = new Employee(employeeRequest.getFirstName(),
-                employeeRequest.getLastName(),
+        Employee employee = new Employee(StringUtils.capitalize(employeeRequest.getFirstName()),
+                StringUtils.capitalize(employeeRequest.getLastName()),
                 employeeRequest.getDepartment(),
                 employeeRequest.getSalary());
 
