@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -167,12 +168,34 @@ public class EmployeeServiceTest {
                         new Employee("NameFive", "LastNameFive", 5, 50000));
     }
 
+//    @Test
+//    public void removeEmployee() {
+//        employeeService.removeEmployee(0);
+//        Collection<Employee> employees = employeeService.getAllEmployees();
+//        Assertions.assertThat(employees).hasSize(4);
+//        employeeService.removeEmployee(0);
+//        Assertions.assertThat(employees).hasSize(4);
+//    } //тест отдельно проходит, но с другими нет, т.к. id от статического счетчика и у первого сотрудника id=12 здесь
+
     @Test
     public void removeEmployee() {
-        employeeService.removeEmployee(0);
+        int indexFirstElement = employeeService.getAllEmployees().iterator().next().getId();
+        employeeService.removeEmployee(indexFirstElement);
         Collection<Employee> employees = employeeService.getAllEmployees();
         Assertions.assertThat(employees).hasSize(4);
-        employeeService.removeEmployee(0);
+        employeeService.removeEmployee(indexFirstElement);
         Assertions.assertThat(employees).hasSize(4);
+    }
+
+    @Test
+    public void getEmployeeAboveAverageSalaryIsEmpty() {
+        this.employeeService = new EmployeeService();
+        List<Employee> aboveAverageSalaryListEmpty = employeeService.getEmployeeAboveAverageSalary();
+        Assertions.assertThat(aboveAverageSalaryListEmpty).hasSize(0).isEmpty();
+        //hasSize(0) здесь в принципе избыточно
+
+        //Здесь проверка, что если getAverageSalary() возвращает null (при отсутствии сотрудников), то
+        //getEmployeeAboveAverageSalary() возвращает пустой список.
+        //Но покрытие тестами показывает что строки с этим условием и возвратом пустого списка не покрыты тестами
     }
 }
