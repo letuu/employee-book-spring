@@ -2,6 +2,7 @@ package com.skypro.employeebookspring.service;
 
 import com.skypro.employeebookspring.exception.EmployeeNotFoundExp;
 import com.skypro.employeebookspring.exception.InvalidEmployeeRequestExp;
+import com.skypro.employeebookspring.exception.RepeatEmployeeException;
 import com.skypro.employeebookspring.model.Employee;
 import com.skypro.employeebookspring.record.EmployeeRequest;
 import org.apache.commons.lang3.StringUtils;
@@ -31,8 +32,11 @@ public class EmployeeService {
                 employeeRequest.getDepartment(),
                 employeeRequest.getSalary());
 
-        this.employees.put(employee.getId(), employee);
-        return employee;
+        if (employees.containsValue(employee)) {
+            throw new RepeatEmployeeException("Такой сотрудник уже существует");
+        }
+            this.employees.put(employee.getId(), employee);
+            return employee;
     }
 
     public int getSalarySum() {
@@ -70,4 +74,8 @@ public class EmployeeService {
 //        return employees.values().stream()
 //                .mapToInt(Employee::getSalary).average();
 //    }
+
+    public Employee removeEmployee(int id) {
+        return employees.remove(id);
+    }
 }
